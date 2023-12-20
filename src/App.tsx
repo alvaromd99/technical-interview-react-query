@@ -4,10 +4,13 @@ import { useUserStore } from './store/useUserStore'
 import ToggleBtn from './components/buttons/ToggleBtn'
 import NormalBtn from './components/buttons/NormalBtn'
 import useFetchUsers from './hooks/useFetchUsers'
+import { useFetchUsersTans } from './hooks/useFetchUsersTans'
 
 function App() {
-	const { originalUsers, loading, error } = useFetchUsers()
+	const { originalUsers } = useFetchUsers()
 	const { setUsers, setFilterCountry } = useUserStore()
+
+	const { isLoading, isError } = useFetchUsersTans()
 
 	const handleReset = () => {
 		setUsers(originalUsers)
@@ -30,9 +33,9 @@ function App() {
 					/>
 				</div>
 			</header>
-			{loading && !error && <p>Loading...</p>}
-			{!loading && error && <p>Error fetching data.</p>}
-			{!loading && !error && <UsersTable />}
+			{isLoading && !isError && <p>Loading...</p>}
+			{!isLoading && isError && <p>Error fetching data.</p>}
+			{!isLoading && !isError && <UsersTable />}
 		</div>
 	)
 }
