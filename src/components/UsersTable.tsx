@@ -5,11 +5,11 @@ import { useFetchUsersTans } from '../hooks/useFetchUsersTans'
 
 export default function UsersTable() {
 	const { showColors, sortingValue, filterCountry } = useUserStore()
-	const { deleteUser, setSortingValue, setNextCurrentPage } = useUserStore()
+	const { deleteUser, setSortingValue } = useUserStore()
 
-	const { data } = useFetchUsersTans()
+	const { data, fetchNextPage } = useFetchUsersTans()
 
-	const users: User[] = data?.pages[0].users ?? []
+	const users: User[] = data?.pages.flatMap((page) => page.users) ?? []
 
 	const filteredUsers = useMemo(() => {
 		return filterCountry !== ''
@@ -83,7 +83,7 @@ export default function UsersTable() {
 					})}
 				</tbody>
 			</table>
-			<button onClick={setNextCurrentPage}>More results</button>
+			<button onClick={async () => await fetchNextPage()}>More results</button>
 		</>
 	)
 }

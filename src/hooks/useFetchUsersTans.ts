@@ -33,5 +33,6 @@ export function useFetchUsersTans() {
 		queryFn: ({ pageParam }) => fetchUsers({ pageParam: pageParam as number }),
 		initialPageParam: 1,
 		getNextPageParam: (lastPage) => lastPage.nextPage,
+		refetchOnWindowFocus: false,
 	})
 }
