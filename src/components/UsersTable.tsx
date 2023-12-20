@@ -1,13 +1,15 @@
 import { useMemo } from 'react'
 import { useUserStore } from '../store/useUserStore'
-import { SortBy } from '../types/types'
+import { SortBy, User } from '../types/types'
 import { useFetchUsersTans } from '../hooks/useFetchUsersTans'
 
 export default function UsersTable() {
 	const { showColors, sortingValue, filterCountry } = useUserStore()
-	const { deleteUser, setSortingValue } = useUserStore()
+	const { deleteUser, setSortingValue, setNextCurrentPage } = useUserStore()
 
-	const { data: users } = useFetchUsersTans()
+	const { data } = useFetchUsersTans()
+
+	const users: User[] = data?.pages[0].users ?? []
 
 	const filteredUsers = useMemo(() => {
 		return filterCountry !== ''
@@ -45,40 +47,43 @@ export default function UsersTable() {
 	}, [filteredUsers, sortingValue, sortFunctions])
 
 	return (
-		<table className='table'>
-			<thead>
-				<tr>
-					<th>Photo</th>
-					<th onClick={() => setSortingValue(SortBy.NAME)}>Name</th>
-					<th onClick={() => setSortingValue(SortBy.LAST)}>Last Name</th>
-					<th onClick={() => setSortingValue(SortBy.COUNTRY)}>Country</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody className={`${showColors ? 'colored' : ''}`}>
-				{sortedUsers?.map((user) => {
-					return (
-						<tr key={user.login.uuid}>
-							<td className='image-cell'>
-								<img
-									src={user.picture.thumbnail}
-									alt={`${user.name.first} Photo`}
-								/>
-							</td>
-							<td>{user.name.first}</td>
-							<td>{user.name.last}</td>
-							<td>{user.location.country}</td>
-							<td>
-								<button
-									className='btn action-btn'
-									onClick={() => deleteUser(user.login.uuid)}>
-									Delete
-								</button>
-							</td>
-						</tr>
-					)
-				})}
-			</tbody>
-		</table>
+		<>
+			<table className='table'>
+				<thead>
+					<tr>
+						<th>Photo</th>
+						<th onClick={() => setSortingValue(SortBy.NAME)}>Name</th>
+						<th onClick={() => setSortingValue(SortBy.LAST)}>Last Name</th>
+						<th onClick={() => setSortingValue(SortBy.COUNTRY)}>Country</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody className={`${showColors ? 'colored' : ''}`}>
+					{sortedUsers?.map((user) => {
+						return (
+							<tr key={user.login.uuid}>
+								<td className='image-cell'>
+									<img
+										src={user.picture.thumbnail}
+										alt={`${user.name.first} Photo`}
+									/>
+								</td>
+								<td>{user.name.first}</td>
+								<td>{user.name.last}</td>
+								<td>{user.location.country}</td>
+								<td>
+									<button
+										className='btn action-btn'
+										onClick={() => deleteUser(user.login.uuid)}>
+										Delete
+									</button>
+								</td>
+							</tr>
+						)
+					})}
+				</tbody>
+			</table>
+			<button onClick={setNextCurrentPage}>More results</button>
+		</>
 	)
 }

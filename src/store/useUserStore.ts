@@ -6,6 +6,7 @@ export interface UserState {
 	showColors: boolean
 	sortingValue: SortBy
 	filterCountry: string
+	currentPage: number
 }
 
 interface UserActions {
@@ -14,6 +15,7 @@ interface UserActions {
 	toggleProperty: <K extends keyof UserState>(propertyName: K) => void
 	setFilterCountry: (value: string) => void
 	setSortingValue: (value: SortBy) => void
+	setNextCurrentPage: () => void
 }
 
 export const useUserStore = create<UserState & UserActions>((set, get) => ({
@@ -21,6 +23,7 @@ export const useUserStore = create<UserState & UserActions>((set, get) => ({
 	showColors: false,
 	sortingValue: SortBy.NONE,
 	filterCountry: '',
+	currentPage: 1,
 
 	setUsers: (newUsers) => {
 		set(() => ({
@@ -54,6 +57,12 @@ export const useUserStore = create<UserState & UserActions>((set, get) => ({
 			get().sortingValue === SortBy.NONE ? value : SortBy.NONE
 		set(() => ({
 			sortingValue: newSortingValue,
+		}))
+	},
+
+	setNextCurrentPage: () => {
+		set(() => ({
+			currentPage: get().currentPage + 1,
 		}))
 	},
 }))

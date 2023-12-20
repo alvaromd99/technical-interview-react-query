@@ -1,21 +1,32 @@
-import { useQuery } from '@tanstack/react-query'
-import { User } from '../types/types'
+import { User } from './../types/types'
+import { useInfiniteQuery } from '@tanstack/react-query'
 
-async function fetchUsers() {
+interface Response {
+	users: User[]
+	nextPage: number
+}
+
+// TODO fix this any
+async function fetchUsers({ pageParam }: any) {
 	const response = await fetch(
-		'https://randomuser.me/api/?results=100&seed=abc123'
+		`https://randomuser.me/api/?page=${pageParam}&results=10&seed=abc123`
 	)
 	if (!response.ok) {
 		throw new Error('Network response was not ok.')
 	}
 	const data = await response.json()
 
-	return data.results
+	return {
+		users: data.results,
+		nextPage: data.info.page + 1,
+	}
 }
 
 export function useFetchUsersTans() {
-	return useQuery<User[]>({
+	return useInfiniteQuery<Response>({
 		queryKey: ['users'],
 		queryFn: fetchUsers,
+		initialPageParam: 1,
+		getNextPageParam: (lastPage) => lastPage.nextPage,
 	})
 }
