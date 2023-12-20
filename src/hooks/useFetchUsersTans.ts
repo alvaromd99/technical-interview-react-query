@@ -6,8 +6,14 @@ interface Response {
 	nextPage: number
 }
 
-// TODO fix this any
+interface Params {
+	pageParam?: number
+}
+
+// TODO Fix this any
 async function fetchUsers({ pageParam }: any) {
+	console.log(pageParam)
+
 	const response = await fetch(
 		`https://randomuser.me/api/?page=${pageParam}&results=10&seed=abc123`
 	)
