@@ -7,11 +7,10 @@ interface Response {
 }
 
 interface Params {
-	pageParam?: number
+	pageParam: number
 }
 
-// TODO Fix this any
-async function fetchUsers({ pageParam }: any) {
+async function fetchUsers({ pageParam }: Params) {
 	console.log(pageParam)
 
 	const response = await fetch(
@@ -31,7 +30,7 @@ async function fetchUsers({ pageParam }: any) {
 export function useFetchUsersTans() {
 	return useInfiniteQuery<Response>({
 		queryKey: ['users'],
-		queryFn: fetchUsers,
+		queryFn: ({ pageParam }) => fetchUsers({ pageParam: pageParam as number }),
 		initialPageParam: 1,
 		getNextPageParam: (lastPage) => lastPage.nextPage,
 	})
