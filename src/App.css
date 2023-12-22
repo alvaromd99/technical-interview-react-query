@@ -98,6 +98,10 @@
 	border: none;
 }
 
+.more-btn {
+	max-width: 12rem;
+}
+
 /* Btn css */
 .btn {
 	appearance: none;

@@ -12,8 +12,9 @@ export default function UsersTable() {
 
 	const users: User[] = data?.pages.flatMap((page) => page.users) ?? []
 
-	const nonDeletedUsers = users.filter(
-		(user) => !deletedUsersId.includes(user.login.uuid)
+	const nonDeletedUsers = useMemo(
+		() => users.filter((user) => !deletedUsersId.includes(user.login.uuid)),
+		[users, deletedUsersId]
 	)
 
 	const filteredUsers = useMemo(() => {
@@ -91,7 +92,9 @@ export default function UsersTable() {
 				</tbody>
 			</table>
 			{hasNextPage === true && (
-				<button onClick={async () => await fetchNextPage()}>
+				<button
+					className='btn more-btn'
+					onClick={async () => await fetchNextPage()}>
 					More results
 				</button>
 			)}
