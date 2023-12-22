@@ -7,7 +7,7 @@ export default function UsersTable() {
 	const { showColors, sortingValue, filterCountry } = useUserStore()
 	const { deleteUser, setSortingValue } = useUserStore()
 
-	const { data, fetchNextPage } = useFetchUsersTans()
+	const { data, fetchNextPage, hasNextPage } = useFetchUsersTans()
 
 	const users: User[] = data?.pages.flatMap((page) => page.users) ?? []
 
@@ -83,7 +83,11 @@ export default function UsersTable() {
 					})}
 				</tbody>
 			</table>
-			<button onClick={async () => await fetchNextPage()}>More results</button>
+			{hasNextPage === true && (
+				<button onClick={async () => await fetchNextPage()}>
+					More results
+				</button>
+			)}
 		</>
 	)
 }

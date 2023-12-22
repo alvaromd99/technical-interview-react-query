@@ -3,7 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 
 interface Response {
 	users: User[]
-	nextPage: number
+	nextPage?: number
 }
 
 interface Params {
@@ -20,10 +20,12 @@ async function fetchUsers({ pageParam }: Params) {
 		throw new Error('Network response was not ok.')
 	}
 	const data = await response.json()
+	const nextPage = Number(data.info.page)
+	const nextPageNum = nextPage > 3 ? undefined : nextPage + 1
 
 	return {
-		users: data.results,
-		nextPage: data.info.page + 1,
+		users: data.results as User[],
+		nextPage: nextPageNum,
 	}
 }
 

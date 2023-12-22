@@ -89,7 +89,7 @@
 }
 
 .search-input {
-	min-height: 60px;
+	min-height: 34px;
 	display: flex;
 	align-items: center;
 	border-radius: 15px;
@@ -131,6 +131,13 @@
 }
 
 .btn:hover {
+	color: var(--letter-color);
+	background-color: var(--bg-color);
+	box-shadow: rgba(255, 255, 255, 0.432) 0 4px 10px;
+	transform: translateY(-2px);
+}
+
+.btn:focus {
 	color: var(--letter-color);
 	background-color: var(--bg-color);
 	box-shadow: rgba(255, 255, 255, 0.432) 0 4px 10px;
