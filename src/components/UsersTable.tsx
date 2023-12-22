@@ -4,22 +4,27 @@ import { SortBy, User } from '../types/types'
 import { useFetchUsersTans } from '../hooks/useFetchUsersTans'
 
 export default function UsersTable() {
-	const { showColors, sortingValue, filterCountry } = useUserStore()
-	const { deleteUser, setSortingValue } = useUserStore()
+	const { showColors, sortingValue, filterCountry, deletedUsersId } =
+		useUserStore()
+	const { setSortingValue, addDeletedUser } = useUserStore()
 
 	const { data, fetchNextPage, hasNextPage } = useFetchUsersTans()
 
 	const users: User[] = data?.pages.flatMap((page) => page.users) ?? []
 
+	const nonDeletedUsers = users.filter(
+		(user) => !deletedUsersId.includes(user.login.uuid)
+	)
+
 	const filteredUsers = useMemo(() => {
 		return filterCountry !== ''
-			? users?.filter((user) =>
+			? nonDeletedUsers?.filter((user) =>
 					user.location.country
 						.toLowerCase()
 						.includes(filterCountry.toLowerCase())
 			  )
-			: users
-	}, [users, filterCountry])
+			: nonDeletedUsers
+	}, [nonDeletedUsers, filterCountry])
 
 	const sortFunctions = useMemo(
 		() => ({
@@ -74,7 +79,9 @@ export default function UsersTable() {
 								<td>
 									<button
 										className='btn action-btn'
-										onClick={() => deleteUser(user.login.uuid)}>
+										onClick={() => {
+											addDeletedUser(user.login.uuid)
+										}}>
 										Delete
 									</button>
 								</td>

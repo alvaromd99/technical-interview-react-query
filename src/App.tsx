@@ -3,17 +3,16 @@ import UsersTable from './components/UsersTable'
 import { useUserStore } from './store/useUserStore'
 import ToggleBtn from './components/buttons/ToggleBtn'
 import NormalBtn from './components/buttons/NormalBtn'
-import useFetchUsers from './hooks/useFetchUsers'
 import { useFetchUsersTans } from './hooks/useFetchUsersTans'
 
 function App() {
-	const { originalUsers } = useFetchUsers()
-	const { setUsers, setFilterCountry } = useUserStore()
+	const { setFilterCountry, resetDeletedUsers } = useUserStore()
 
-	const { isLoading, isError } = useFetchUsersTans()
+	const { isLoading, isError, refetch } = useFetchUsersTans()
 
 	const handleReset = () => {
-		setUsers(originalUsers)
+		resetDeletedUsers()
+		refetch()
 	}
 
 	return (
